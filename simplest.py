@@ -47,6 +47,21 @@ def conv_model(features, labels, mode):
       rate=0.5,
       training=(mode == tf.estimator.ModeKeys.TRAIN))
 
+  # Compute logits (1 per class) and compute loss.
+  logits = tf.layers.dense(h_fc1, N_DIGITS, activation=None)
+
+  # Compute predictions.
+  predicted_classes = tf.argmax(logits, 1)
+  if mode == tf.estimator.ModeKeys.PREDICT:
+    predictions = {
+        'class': predicted_classes,
+        'prob': tf.nn.softmax(logits)
+    }
+    return tf.estimator.EstimatorSpec(mode, predictions=predictions)
+
+  # Compute loss.
+  loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
+
 
 if __name__ == '__main__':
   tf.app.run()
