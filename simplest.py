@@ -62,6 +62,21 @@ def conv_model(features, labels, mode):
   # Compute loss.
   loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
 
+  # Create training op.
+  if mode == tf.estimator.ModeKeys.TRAIN:
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
+    train_op = optimizer.minimize(loss, global_step=tf.train.get_global_step())
+    return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
+
+  # Compute evaluation metrics.
+  eval_metric_ops = {
+      'accuracy': tf.metrics.accuracy(
+          labels=labels, predictions=predicted_classes)
+  }
+  return tf.estimator.EstimatorSpec(
+      mode, loss=loss, eval_metric_ops=eval_metric_ops)
+
+
 
 if __name__ == '__main__':
   tf.app.run()
