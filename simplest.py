@@ -77,6 +77,23 @@ def conv_model(features, labels, mode):
       mode, loss=loss, eval_metric_ops=eval_metric_ops)
 
 
+def main(unused_args):
+  tf.logging.set_verbosity(tf.logging.INFO)
+
+  ### Download and load MNIST dataset.
+  mnist = tf.contrib.learn.datasets.DATASETS['mnist']('/tmp/mnist')
+  train_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={X_FEATURE: mnist.train.images},
+      y=mnist.train.labels.astype(np.int32),
+      batch_size=100,
+      num_epochs=None,
+      shuffle=True)
+  test_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={X_FEATURE: mnist.train.images},
+      y=mnist.train.labels.astype(np.int32),
+      num_epochs=1,
+      shuffle=False)
+
 
 if __name__ == '__main__':
   tf.app.run()
