@@ -94,6 +94,17 @@ def main(unused_args):
       num_epochs=1,
       shuffle=False)
 
+  ### Linear classifier.
+  feature_columns = [
+      tf.feature_column.numeric_column(
+          X_FEATURE, shape=mnist.train.images.shape[1:])]
+
+  classifier = tf.estimator.LinearClassifier(
+      feature_columns=feature_columns, n_classes=N_DIGITS)
+  classifier.train(input_fn=train_input_fn, steps=200)
+  scores = classifier.evaluate(input_fn=test_input_fn)
+  print('Accuracy (LinearClassifier): {0:f}'.format(scores['accuracy']))
+
 
 if __name__ == '__main__':
   tf.app.run()
