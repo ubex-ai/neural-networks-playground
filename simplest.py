@@ -105,6 +105,12 @@ def main(unused_args):
   scores = classifier.evaluate(input_fn=test_input_fn)
   print('Accuracy (LinearClassifier): {0:f}'.format(scores['accuracy']))
 
+  ### Convolutional network
+  classifier = tf.estimator.Estimator(model_fn=conv_model)
+  classifier.train(input_fn=train_input_fn, steps=200)
+  scores = classifier.evaluate(input_fn=test_input_fn)
+  print('Accuracy (conv_model): {0:f}'.format(scores['accuracy']))
+
 
 if __name__ == '__main__':
   tf.app.run()
