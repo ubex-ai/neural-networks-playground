@@ -73,3 +73,50 @@ def train_and_eval():
 def main(_):
   train_and_eval()
 
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+  parser.add_argument(
+      '--model_dir',
+      type=str,
+      default='',
+      help='Base directory for output models.'
+  )
+  parser.add_argument(
+      '--data_dir',
+      type=str,
+      default='/tmp/data/',
+      help='Directory for storing data'
+  )
+  parser.add_argument(
+      '--train_steps',
+      type=int,
+      default=1000,
+      help='Number of training steps.'
+  )
+  parser.add_argument(
+      '--batch_size',
+      type=str,
+      default=1000,
+      help='Number of examples in a training batch.'
+  )
+  parser.add_argument(
+      '--num_trees',
+      type=int,
+      default=100,
+      help='Number of trees in the forest.'
+  )
+  parser.add_argument(
+      '--max_nodes',
+      type=int,
+      default=1000,
+      help='Max total nodes in a single tree.'
+  )
+  parser.add_argument(
+      '--use_training_loss',
+      type=bool,
+      default=False,
+      help='If true, use training loss as termination criteria.'
+  )
+  FLAGS, unparsed = parser.parse_known_args()
+  app.run(main=main, argv=[sys.argv[0]] + unparsed)
