@@ -67,3 +67,20 @@ def input_fn(file_name, num_data, batch_size, is_training):
 
   return _input_fn
 
+
+def main(unused_argv):
+  tf.logging.set_verbosity(tf.logging.INFO)
+
+  num_training_data = maybe_download_iris_data(
+      IRIS_TRAINING, IRIS_TRAINING_URL)
+  num_test_data = maybe_download_iris_data(IRIS_TEST, IRIS_TEST_URL)
+
+  # Build 3 layer DNN with 10, 20, 10 units respectively.
+  feature_columns = [
+      tf.feature_column.numeric_column(key, shape=1) for key in FEATURE_KEYS]
+  classifier = tf.estimator.DNNClassifier(
+      feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3)
+
+
+if __name__ == '__main__':
+  tf.app.run()
