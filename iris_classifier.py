@@ -81,6 +81,17 @@ def main(unused_argv):
   classifier = tf.estimator.DNNClassifier(
       feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3)
 
+  # Train.
+  train_input_fn = input_fn(IRIS_TRAINING, num_training_data, batch_size=32,
+                            is_training=True)
+  classifier.train(input_fn=train_input_fn, steps=400)
+
+  # Eval.
+  test_input_fn = input_fn(IRIS_TEST, num_test_data, batch_size=32,
+                           is_training=False)
+  scores = classifier.evaluate(input_fn=test_input_fn)
+  print('Accuracy (tensorflow): {0:f}'.format(scores['accuracy']))
+
 
 if __name__ == '__main__':
   tf.app.run()
