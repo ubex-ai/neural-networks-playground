@@ -34,3 +34,15 @@ def res_net_model(features, labels, mode):
 
   training = (mode == tf.estimator.ModeKeys.TRAIN)
 
+  # First convolution expands to 64 channels
+  with tf.variable_scope('conv_layer1'):
+    net = tf.layers.conv2d(
+        x,
+        filters=64,
+        kernel_size=7,
+        activation=tf.nn.relu)
+    net = tf.layers.batch_normalization(net, training=training)
+
+  # Max pool
+  net = tf.layers.max_pooling2d(
+      net, pool_size=3, strides=2, padding='same')
