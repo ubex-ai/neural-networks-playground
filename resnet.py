@@ -46,3 +46,11 @@ def res_net_model(features, labels, mode):
   # Max pool
   net = tf.layers.max_pooling2d(
       net, pool_size=3, strides=2, padding='same')
+
+  # First chain of resnets
+  with tf.variable_scope('conv_layer2'):
+    net = tf.layers.conv2d(
+        net,
+        filters=groups[0].num_filters,
+        kernel_size=1,
+        padding='valid')
