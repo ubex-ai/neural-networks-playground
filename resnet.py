@@ -94,3 +94,27 @@ def res_net_model(features, labels, mode):
       # shortcut connections that turn the network into its counterpart
       # residual function (identity shortcut)
       net = conv + net
+
+    try:
+      # upscale to the next group size
+      next_group = groups[group_i + 1]
+      with tf.variable_scope('block_%d/conv_upscale' % group_i):
+        net = tf.layers.conv2d(
+            net,
+            filters=next_group.num_filters,
+            kernel_size=1,
+            padding='same',
+            activation=None,
+            bias_initializer=None)
+    except IndexError:
+      pass
+
+  net_shape = net.get_shape().as_list()
+  net = tf.nn.avg_pool(
+      net,
+      ksize=[1, net_shape[1], net_shape[2], 1],
+      strides=[1, 1, 1, 1],
+      padding='VALID')
+
+  net_shape = net.get_shape().as_list()
+  net = tf.reshape(net, [-1, net_shape[1] * net_shape[2] * net_shape[3]])
