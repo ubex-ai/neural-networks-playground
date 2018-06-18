@@ -118,3 +118,18 @@ def res_net_model(features, labels, mode):
 
   net_shape = net.get_shape().as_list()
   net = tf.reshape(net, [-1, net_shape[1] * net_shape[2] * net_shape[3]])
+
+  # Compute logits (1 per class) and compute loss.
+  logits = tf.layers.dense(net, N_DIGITS, activation=None)
+
+  # Compute predictions.
+  predicted_classes = tf.argmax(logits, 1)
+  if mode == tf.estimator.ModeKeys.PREDICT:
+    predictions = {
+        'class': predicted_classes,
+        'prob': tf.nn.softmax(logits)
+    }
+    return tf.estimator.EstimatorSpec(mode, predictions=predictions)
+
+  # Compute loss.
+  loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
