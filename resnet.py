@@ -148,3 +148,25 @@ def res_net_model(features, labels, mode):
   return tf.estimator.EstimatorSpec(
       mode, loss=loss, eval_metric_ops=eval_metric_ops)
 
+
+def main(unused_args):
+  # Download and load MNIST data.
+  mnist = tf.contrib.learn.datasets.DATASETS['mnist']('/tmp/mnist')
+
+  # Create a new resnet classifier.
+  classifier = tf.estimator.Estimator(model_fn=res_net_model)
+
+  tf.logging.set_verbosity(tf.logging.INFO)  # Show training logs.
+
+  # Train model and save summaries into logdir.
+  train_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={X_FEATURE: mnist.train.images},
+      y=mnist.train.labels.astype(np.int32),
+      batch_size=100,
+      num_epochs=None,
+      shuffle=True)
+  classifier.train(input_fn=train_input_fn, steps=100)
+
+
+if __name__ == '__main__':
+  tf.app.run()
