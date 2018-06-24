@@ -167,6 +167,15 @@ def main(unused_args):
       shuffle=True)
   classifier.train(input_fn=train_input_fn, steps=100)
 
+  # Calculate accuracy.
+  test_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={X_FEATURE: mnist.test.images},
+      y=mnist.test.labels.astype(np.int32),
+      num_epochs=1,
+      shuffle=False)
+  scores = classifier.evaluate(input_fn=test_input_fn)
+  print('Accuracy: {0:f}'.format(scores['accuracy']))
+
 
 if __name__ == '__main__':
   tf.app.run()
