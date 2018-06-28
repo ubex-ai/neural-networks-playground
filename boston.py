@@ -24,5 +24,17 @@ def main(unused_argv):
   scaler = preprocessing.StandardScaler()
   x_train = scaler.fit_transform(x_train)
 
+  # Build 2 layer fully connected DNN with 10, 10 units respectively.
+  feature_columns = [
+      tf.feature_column.numeric_column('x', shape=np.array(x_train).shape[1:])]
+  regressor = tf.estimator.DNNRegressor(
+      feature_columns=feature_columns, hidden_units=[10, 10])
+
+  # Train.
+  train_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={'x': x_train}, y=y_train, batch_size=1, num_epochs=None, shuffle=True)
+  regressor.train(input_fn=train_input_fn, steps=2000)
+
+
 if __name__ == '__main__':
   tf.app.run()
