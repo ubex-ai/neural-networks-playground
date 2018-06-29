@@ -35,6 +35,13 @@ def main(unused_argv):
       x={'x': x_train}, y=y_train, batch_size=1, num_epochs=None, shuffle=True)
   regressor.train(input_fn=train_input_fn, steps=2000)
 
+  # Predict.
+  x_transformed = scaler.transform(x_test)
+  test_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={'x': x_transformed}, y=y_test, num_epochs=1, shuffle=False)
+  predictions = regressor.predict(input_fn=test_input_fn)
+  y_predicted = np.array(list(p['predictions'] for p in predictions))
+  y_predicted = y_predicted.reshape(np.array(y_test).shape)
 
 if __name__ == '__main__':
   tf.app.run()
