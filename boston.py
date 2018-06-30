@@ -43,5 +43,14 @@ def main(unused_argv):
   y_predicted = np.array(list(p['predictions'] for p in predictions))
   y_predicted = y_predicted.reshape(np.array(y_test).shape)
 
+  # Score with sklearn.
+  score_sklearn = metrics.mean_squared_error(y_predicted, y_test)
+  print('MSE (sklearn): {0:f}'.format(score_sklearn))
+
+  # Score with tensorflow.
+  scores = regressor.evaluate(input_fn=test_input_fn)
+  print('MSE (tensorflow): {0:f}'.format(scores['average_loss']))
+
+
 if __name__ == '__main__':
   tf.app.run()
