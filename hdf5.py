@@ -28,5 +28,11 @@ def main(unused_argv):
   h5f.create_dataset('y_test', data=y_test)
   h5f.close()
 
+  h5f = h5py.File('/tmp/test_hdf5.h5', 'r')
+  x_train = np.array(h5f['X_train'])
+  x_test = np.array(h5f['X_test'])
+  y_train = np.array(h5f['y_train'])
+  y_test = np.array(h5f['y_test'])
+
 if __name__ == '__main__':
   tf.app.run()
