@@ -34,5 +34,13 @@ def main(unused_argv):
   y_train = np.array(h5f['y_train'])
   y_test = np.array(h5f['y_test'])
 
+  # Build 3 layer DNN with 10, 20, 10 units respectively.
+  feature_columns = [
+      tf.feature_column.numeric_column(
+          X_FEATURE, shape=np.array(x_train).shape[1:])]
+  classifier = tf.estimator.DNNClassifier(
+      feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3)
+
+
 if __name__ == '__main__':
   tf.app.run()
