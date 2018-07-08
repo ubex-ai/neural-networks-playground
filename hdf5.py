@@ -41,6 +41,11 @@ def main(unused_argv):
   classifier = tf.estimator.DNNClassifier(
       feature_columns=feature_columns, hidden_units=[10, 20, 10], n_classes=3)
 
+  # Train.
+  train_input_fn = tf.estimator.inputs.numpy_input_fn(
+      x={X_FEATURE: x_train}, y=y_train, num_epochs=None, shuffle=True)
+  classifier.train(input_fn=train_input_fn, steps=200)
+
 
 if __name__ == '__main__':
   tf.app.run()
