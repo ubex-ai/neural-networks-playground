@@ -53,6 +53,14 @@ def main(unused_argv):
   y_predicted = np.array(list(p['class_ids'] for p in predictions))
   y_predicted = y_predicted.reshape(np.array(y_test).shape)
 
+  # Score with sklearn.
+  score = metrics.accuracy_score(y_test, y_predicted)
+  print('Accuracy (sklearn): {0:f}'.format(score))
+
+  # Score with tensorflow.
+  scores = classifier.evaluate(input_fn=test_input_fn)
+  print('Accuracy (tensorflow): {0:f}'.format(scores['accuracy']))
+
 
 if __name__ == '__main__':
   tf.app.run()
